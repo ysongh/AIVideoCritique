@@ -23,6 +23,19 @@ app.get('/transcript/:videoId', async (req, res) => {
   }
 });
 
+app.get('/texts/:videoId', async (req, res) => {
+  try {
+    const videoId = req.params.videoId;
+    const transcript = await YoutubeTranscript.getTranscript(videoId);
+    const text = transcript.map(item => item.text).join(' ');
+
+    res.json({ text: text });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get('/', (req, res) => res.send('It Work'));
 
 const port = process.env.PORT || 4000;

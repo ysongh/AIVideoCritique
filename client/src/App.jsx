@@ -1,10 +1,10 @@
-
+import FeedbackForm from "./pages/FeedbackForm";
 
 function App() {
 
   return (
     <>
-      <h1>AI Video Critique</h1>
+      <FeedbackForm />
     </>
   )
 }

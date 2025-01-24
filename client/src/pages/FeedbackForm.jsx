@@ -70,7 +70,7 @@ const FeedbackForm = () => {
 
       {data && (
         <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
-          Success! Post created with ID: {data.id}
+          {data.feedback}
         </div>
       )}
     </div>

@@ -30,7 +30,7 @@ app.get('/transcript/:videoId', async (req, res) => {
 
 app.post('/texts', async (req, res) => {
   try {
-    const videoId = req.body.videoId;
+    const videoId = req.body.videoID;
     const transcript = await YoutubeTranscript.getTranscript(videoId);
     const text = transcript.map(item => item.text).join(' ');
 

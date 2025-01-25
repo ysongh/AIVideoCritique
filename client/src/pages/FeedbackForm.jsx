@@ -2,16 +2,16 @@ import { useState } from 'react';
 
 const FeedbackForm = () => {
   const [data, setData] = useState(null);
+  const [videoID, setVideoID] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getFeedback = async (event) => {
-    event.preventDefault();
+  const getFeedback = async () => {
     setLoading(true);
     setError(null);
 
     const formData = {
-      videoID: event.target.videoID.value,
+      videoID: videoID,
     };
     console.log(formData);
 
@@ -39,7 +39,7 @@ const FeedbackForm = () => {
 
   return (
     <div className="max-w-md mx-auto p-6">
-      <form onSubmit={getFeedback} className="space-y-4">
+      <form className="space-y-4">
         <div>
           <label htmlFor="videoID" className="block text-sm font-medium mb-1">
             Video ID
@@ -48,13 +48,14 @@ const FeedbackForm = () => {
             type="text"
             id="videoID"
             name="videoID"
+            value={videoID}
+            onChange={(e) => setVideoID(e.target.value)}
             className="w-full border rounded-md p-2"
-            required
           />
         </div>
 
         <button
-          type="submit"
+          onClick={getFeedback}
           disabled={loading}
           className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
         >

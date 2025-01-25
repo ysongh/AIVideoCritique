@@ -5,7 +5,7 @@ const FeedbackForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (event) => {
+  const getFeedback = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
@@ -39,7 +39,7 @@ const FeedbackForm = () => {
 
   return (
     <div className="max-w-md mx-auto p-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={getFeedback} className="space-y-4">
         <div>
           <label htmlFor="videoID" className="block text-sm font-medium mb-1">
             Video ID

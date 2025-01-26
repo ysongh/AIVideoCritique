@@ -29,6 +29,18 @@ app.get('/transcript/:videoId', async (req, res) => {
   }
 });
 
+app.get('/validateID/:videoId', async (req, res) => {
+  try {
+    const videoId = req.params.videoId;
+    const isValidate = await YoutubeTranscript.validateID(videoId);
+
+    res.json({ isValidate: isValidate });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.post('/texts', async (req, res) => {
   try {
     const videoId = req.body.videoID;

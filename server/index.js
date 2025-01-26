@@ -8,13 +8,14 @@ const OpenAI = require('openai');
 
 const app = express();
 const client = new OpenAI({
-  baseURL: 'https://llama8b.gaia.domains/v1',
-  apiKey: ''
+  baseURL: process.env.OPENAI_BASEURL,
+  apiKey: process.env.OPENAI_APIKEY
 });
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
+
 
 app.get('/transcript/:videoId', async (req, res) => {
   try {

@@ -44,6 +44,10 @@ app.get('/validateID/:videoId', async (req, res) => {
 app.post('/texts', async (req, res) => {
   try {
     const videoId = req.body.videoID;
+
+    const isValidate = await YoutubeTranscript.validateID(videoId);
+    if (!isValidate) return res.status(400).json({ error: "This Video does not exists on YouTube" });
+
     const transcript = await YoutubeTranscript.getTranscript(videoId);
     const text = transcript.map(item => item.text).join(' ');
 
@@ -70,6 +74,10 @@ app.post('/texts', async (req, res) => {
 app.get('/texts/:videoId', async (req, res) => {
   try {
     const videoId = req.params.videoId;
+    
+    const isValidate = await YoutubeTranscript.validateID(videoId);
+    if (!isValidate) return res.status(400).json({ error: "This Video does not exists on YouTube" });
+
     const transcript = await YoutubeTranscript.getTranscript(videoId);
     const text = transcript.map(item => item.text).join(' ');
 

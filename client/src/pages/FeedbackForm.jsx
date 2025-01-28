@@ -16,7 +16,7 @@ const FeedbackForm = () => {
     console.log(formData);
 
     try {
-      const response = await fetch('http://localhost:4000/texts', {
+      const response = await fetch('http://localhost:4000/api/video/texts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

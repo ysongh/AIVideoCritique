@@ -1,10 +1,12 @@
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
+import Navbar from './components/Navbar';
 import FeedbackForm from "./pages/FeedbackForm";
 
 function App() {
   return (
     <HashRouter>
+      <Navbar />
       <Routes>
         <Route
           path="/test"

@@ -10,7 +10,8 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { name: 'Home', href: '/' },
+    { name: 'Video Feedback', href: '/' },
+    { name: 'Dependencies Viewer', href: '/githubdependenciesviewer'}
   ];
 
   return (

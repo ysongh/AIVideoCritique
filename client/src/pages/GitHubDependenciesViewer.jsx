@@ -7,6 +7,36 @@ const GitHubDependenciesViewer = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const checkForMalicious = async () => {
+    setLoading(true);
+    setError(null);
+
+    const formData = {
+      dependencies: dependencies,
+    };
+
+    try {
+      const response = await fetch('http://localhost:4000/api/dependencies/checkismalicious', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchDependencies = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -85,6 +115,16 @@ const GitHubDependenciesViewer = () => {
           </div>
           <p className="mt-1 text-red-600">{error}</p>
         </div>
+      )}
+
+      {dependencies && (
+         <button
+          onClick={checkForMalicious}
+          disabled={loading}
+          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+        >
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
       )}
 
       {dependencies && (

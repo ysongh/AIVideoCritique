@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ExternalLink } from 'lucide-react';
 
 const GitHubDependenciesViewer = () => {
   const [url, setUrl] = useState('');
@@ -74,9 +74,29 @@ const GitHubDependenciesViewer = () => {
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {Object.entries(deps).map(([name, version]) => (
-            <div key={name} className="p-2 bg-gray-100 rounded-md">
-              <span className="font-medium">{name}</span>
-              <span className="text-gray-600 ml-2">{version}</span>
+            <div key={name} className="p-2 bg-gray-100 rounded-md flex items-center justify-between group">
+              <div>
+                <a 
+                  href={`https://www.npmjs.com/package/${name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                >
+                  {name}
+                  <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </a>
+                <span className="text-gray-600 text-sm">{version}</span>
+              </div>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <a 
+                  href={`https://www.npmjs.com/package/${name}/v/${version.replace('^', '').replace('~', '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-gray-500 hover:text-gray-700"
+                >
+                  View version
+                </a>
+              </div>
             </div>
           ))}
         </div>
@@ -115,16 +135,6 @@ const GitHubDependenciesViewer = () => {
           </div>
           <p className="mt-1 text-red-600">{error}</p>
         </div>
-      )}
-
-      {dependencies && (
-         <button
-          onClick={checkForMalicious}
-          disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
-        >
-          {loading ? 'Submitting...' : 'Submit'}
-        </button>
       )}
 
       {dependencies && (

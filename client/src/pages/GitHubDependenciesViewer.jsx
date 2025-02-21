@@ -120,7 +120,7 @@ const GitHubDependenciesViewer = () => {
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400"
+            className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400"
           >
             {loading ? 'Loading...' : 'Fetch'}
           </button>
@@ -135,6 +135,16 @@ const GitHubDependenciesViewer = () => {
           </div>
           <p className="mt-1 text-red-600">{error}</p>
         </div>
+      )}
+
+      {dependencies && (
+         <button
+          onClick={checkForMalicious}
+          disabled={loading}
+          className="cursor-pointer w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+        >
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
       )}
 
       {dependencies && (

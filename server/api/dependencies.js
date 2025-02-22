@@ -35,8 +35,9 @@ router.post('/checkismalicious', async (req, res) => {
     
     const dependencies = req.body.dependencies;
     console.log(dependencies);
+    const formattedData = JSON.stringify(dependencies, null, 2);
 
-    const prompt = `Is there any dependencies that is malicious: ${dependencies}`;
+    const prompt = `Is there any dependencies that is malicious: ${formattedData}`;
     
     const result = await model.generateContent(prompt);
     const response = result.response;

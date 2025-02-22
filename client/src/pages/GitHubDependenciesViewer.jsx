@@ -5,6 +5,7 @@ const GitHubDependenciesViewer = () => {
   const [url, setUrl] = useState('');
   const [dependencies, setDependencies] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState("");
   const [error, setError] = useState(null);
 
   const checkForMalicious = async () => {
@@ -29,7 +30,7 @@ const GitHubDependenciesViewer = () => {
       }
 
       const result = await response.json();
-      setData(result);
+      setResult(result.text);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -146,6 +147,8 @@ const GitHubDependenciesViewer = () => {
           {loading ? 'Submitting...' : 'Submit'}
         </button>
       )}
+
+      {result && <p>{result}</p>}
 
       {dependencies && (
         <div>

@@ -2,14 +2,8 @@ require('dotenv').config();
 
 const express = require("express");
 const YoutubeTranscript = require("youtube-transcript-api");
-const OpenAI = require('openai');
 
 const router = express.Router();
-
-const client = new OpenAI({
-  baseURL: process.env.OPENAI_BASEURL,
-  apiKey: process.env.OPENAI_APIKEY
-});
 
 router.get('/transcript/:videoId', async (req, res) => {
   try {

@@ -165,6 +165,16 @@ const GitHubDependenciesViewer = () => {
         </div>
       </form>
 
+      {dependencies && (
+         <button
+          onClick={checkForMalicious}
+          disabled={loading}
+          className="cursor-pointer mb-3 w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+        >
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
+      )}
+
       {error && (
         <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md">
           <div className="flex items-center gap-2">
@@ -173,16 +183,6 @@ const GitHubDependenciesViewer = () => {
           </div>
           <p className="mt-1 text-red-600">{error}</p>
         </div>
-      )}
-
-      {dependencies && (
-         <button
-          onClick={checkForMalicious}
-          disabled={loading}
-          className="cursor-pointer w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
-        >
-          {loading ? 'Submitting...' : 'Submit'}
-        </button>
       )}
 
       {result && <p>{result}</p>}

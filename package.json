@@ -1,0 +1,13 @@
+{
+  "name": "aivideocritique",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && pnpm dev",
+    "nodejs": "cd server && pnpm dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

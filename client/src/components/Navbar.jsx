@@ -11,7 +11,8 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Video Feedback', href: '/' },
-    { name: 'Dependencies Viewer', href: '/githubdependenciesviewer'}
+    { name: 'Dependencies Viewer', href: '/githubdependenciesviewer'},
+    { name: 'Python Dependencies Viewer', href: '/pythondependenciesviewer' },
   ];
 
   return (

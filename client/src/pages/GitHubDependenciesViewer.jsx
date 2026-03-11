@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, ExternalLink, Grid, List, Package, Code, Users, BarChart3, Download, Calendar, Shield, Loader2 } from 'lucide-react';
+import { AlertCircle, ExternalLink, Grid, List, Package, Code, Users, BarChart3, Download, Calendar, Shield, Loader2, FileText, Search } from 'lucide-react';
 
 const GitHubDependenciesViewer = () => {
   const [url, setUrl] = useState('');
+  const [rawText, setRawText] = useState('');
+  const [inputMode, setInputMode] = useState('url');
   const [dependencies, setDependencies] = useState(null);
   const [npmDetails, setNpmDetails] = useState({});
   const [viewMode, setViewMode] = useState('grid');
@@ -345,6 +347,31 @@ const GitHubDependenciesViewer = () => {
     }
   };
 
+  const handlePaste = (e) => {
+    e.preventDefault();
+    setError(null);
+    setDependencies(null);
+    setNpmDetails({});
+    setResult("");
+
+    try {
+      const data = JSON.parse(rawText);
+      const deps = {
+        dependencies: data.dependencies || {},
+        devDependencies: data.devDependencies || {},
+        peerDependencies: data.peerDependencies || {}
+      };
+      const total = Object.keys(deps.dependencies).length + Object.keys(deps.devDependencies).length + Object.keys(deps.peerDependencies).length;
+      if (total === 0) {
+        setError('No dependencies found in the pasted JSON.');
+        return;
+      }
+      setDependencies(deps);
+    } catch {
+      setError('Invalid JSON. Make sure you paste a valid package.json content.');
+    }
+  };
+
   const fetchDependencies = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -372,14 +399,48 @@ const GitHubDependenciesViewer = () => {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">GitHub Dependencies Viewer</h1>
 
-      <form onSubmit={fetchDependencies} className="mb-6">
-        <div className="flex gap-4">
-          <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter GitHub package.json URL" className="flex-1 p-2 border rounded-md" />
-          <button type="submit" disabled={loading} className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400">
-            {loading ? 'Loading...' : 'Fetch'}
+      {/* Input mode tabs */}
+      <div className="flex gap-0 mb-4 border-b-2 border-slate-200">
+        <button onClick={() => setInputMode('url')}
+          className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold border-b-2 -mb-[2px] transition-colors ${inputMode === 'url' ? 'text-blue-600 border-blue-600' : 'text-slate-400 border-transparent hover:text-slate-600'}`}>
+          <Search className="h-3.5 w-3.5" />
+          From URL
+        </button>
+        <button onClick={() => setInputMode('paste')}
+          className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold border-b-2 -mb-[2px] transition-colors ${inputMode === 'paste' ? 'text-blue-600 border-blue-600' : 'text-slate-400 border-transparent hover:text-slate-600'}`}>
+          <FileText className="h-3.5 w-3.5" />
+          Paste Content
+        </button>
+      </div>
+
+      {/* URL input */}
+      {inputMode === 'url' && (
+        <form onSubmit={fetchDependencies} className="mb-6">
+          <div className="flex gap-4">
+            <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter GitHub package.json URL" className="flex-1 p-2 border rounded-md" />
+            <button type="submit" disabled={loading} className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400">
+              {loading ? 'Loading...' : 'Fetch'}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Paste input */}
+      {inputMode === 'paste' && (
+        <form onSubmit={handlePaste} className="mb-6">
+          <textarea
+            value={rawText}
+            onChange={(e) => setRawText(e.target.value)}
+            placeholder={'{\n  "dependencies": {\n    "react": "^18.2.0",\n    "express": "^4.18.2"\n  },\n  "devDependencies": {\n    "eslint": "^8.0.0"\n  }\n}'}
+            rows={8}
+            className="w-full p-3 border rounded-md font-mono text-sm resize-y focus:outline-none focus:border-blue-400 transition-colors"
+          />
+          <button type="submit" disabled={!rawText.trim()}
+            className="cursor-pointer mt-3 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-sm font-semibold transition-colors">
+            Parse Dependencies
           </button>
-        </div>
-      </form>
+        </form>
+      )}
 
       {dependencies && (
         <button onClick={checkForMalicious} disabled={loading} className="cursor-pointer mb-3 w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400">

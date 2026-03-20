@@ -379,9 +379,32 @@ const GitHubDependenciesViewer = () => {
     setDependencies(null);
     setNpmDetails({});
     try {
-      const rawUrl = url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-      const response = await fetch(rawUrl);
-      if (!response.ok) throw new Error('Failed to fetch package.json');
+      const trimmedUrl = url.trim();
+      const match = trimmedUrl.match(/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/);
+      if (!match) {
+        throw new Error('Invalid GitHub URL. Expected format: https://github.com/{owner}/{repo}/blob/{branch}/{path}');
+      }
+      const [, owner, repo, branch, path] = match;
+
+      // Try raw.githubusercontent.com first
+      const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+      let response = await fetch(rawUrl);
+
+      // Fallback to GitHub API if raw fetch fails
+      if (!response.ok) {
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+        response = await fetch(apiUrl, {
+          headers: { 'Accept': 'application/vnd.github.raw+json' }
+        });
+      }
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('File not found. Check that the repository, branch, and file path are correct.');
+        }
+        throw new Error(`GitHub returned status ${response.status}`);
+      }
+
       const data = await response.json();
       setDependencies({
         dependencies: data.dependencies || {},
@@ -389,7 +412,7 @@ const GitHubDependenciesViewer = () => {
         peerDependencies: data.peerDependencies || {}
       });
     } catch (err) {
-      setError('Failed to fetch or parse package.json. Make sure the URL is correct.');
+      setError(err.message || 'Failed to fetch or parse package.json.');
     } finally {
       setLoading(false);
     }

@@ -1,18 +1,11 @@
 require('dotenv').config();
 
 const express = require("express");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const Anthropic = require("@anthropic-ai/sdk");
 
 const router = express.Router();
 
-async function initializeGemini() {
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-  const multimodalModel = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
-  
-  return { model, multimodalModel };
-}
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 router.get('/test', async (req, res) => {
   try {
@@ -25,19 +18,23 @@ router.get('/test', async (req, res) => {
 
 router.post('/checkismalicious', async (req, res) => {
   try {
-    const { model } = await initializeGemini();
-    
     const dependencies = req.body.dependencies;
     console.log(dependencies);
     const formattedData = JSON.stringify(dependencies, null, 2);
 
     const prompt = `Is there any dependencies that is malicious: ${formattedData}`;
-    
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    console.log(response.text());
 
-    res.json({ text: response.text() });
+    const response = await client.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 4096,
+      system: "You are a security agent that checks npm/pip dependencies for known vulnerabilities and malicious packages.",
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const text = response.content[0].text;
+    console.log(text);
+
+    res.json({ text });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: error.message });

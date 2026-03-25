@@ -481,7 +481,17 @@ const GitHubDependenciesViewer = () => {
         </div>
       )}
 
-      {result && <p>{result}</p>}
+      {result && (
+        <div className="mb-6 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <Shield className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-slate-800">Security Analysis</h3>
+          </div>
+          <div className="prose prose-sm max-w-none text-slate-700 whitespace-pre-wrap leading-relaxed">
+            {result}
+          </div>
+        </div>
+      )}
 
       {dependencies && (
         <div>

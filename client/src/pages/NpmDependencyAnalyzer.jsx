@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, ExternalLink, Grid, List, Package, Code, Users, BarChart3, Download, Calendar, Shield, Loader2, FileText, Search } from 'lucide-react';
 
-const GitHubDependenciesViewer = () => {
+const NpmDependencyAnalyzer = () => {
   const [url, setUrl] = useState('');
   const [rawText, setRawText] = useState('');
   const [inputMode, setInputMode] = useState('url');
@@ -420,7 +420,7 @@ const GitHubDependenciesViewer = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">GitHub Dependencies Viewer</h1>
+      <h1 className="text-2xl font-bold mb-6">NPM Dependency Analyzer</h1>
 
       {/* Input mode tabs */}
       <div className="flex gap-0 mb-4 border-b-2 border-slate-200">
@@ -514,4 +514,4 @@ const GitHubDependenciesViewer = () => {
   );
 };
 
-export default GitHubDependenciesViewer;
+export default NpmDependencyAnalyzer;
